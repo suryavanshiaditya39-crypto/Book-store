@@ -1,9 +1,14 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { userAuth } from "../context/AuthProvider";
+import { useCart } from "../context/CartContext";
 export default function Navbar() {
   const { user, logout } = userAuth();
+  const {cart} = useCart();
   const navigate = useNavigate();
+  const cartItemCount = cart.reduce((total,item)=> total + item.qty, 0);  
+    
+  
   const handleLogout = () => {
     logout(); // Calls central logout to clear state and storage
     navigate("/login");
@@ -26,6 +31,7 @@ export default function Navbar() {
               <Link to="/books" className="hover:text-blue-600">Books</Link>
               <Link to="/categories" className="hover:text-blue-600">Categories</Link>
               <Link to="/about" className="hover:text-blue-600">About</Link>
+              <Link to="/orders" className="hover:text-blue-600">myorders</Link>
             </>
           )}
         </div>
