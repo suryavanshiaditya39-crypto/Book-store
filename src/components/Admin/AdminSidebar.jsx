@@ -1,8 +1,8 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { userAuth } from "../../context/AuthProvider"; //
+import { useAuth } from "../../context/AuthProvider"; //
 export default function AdminSidebar() {
-  const { logout } = userAuth(); // Get the logout function
+  const { logout } = useAuth(); // Get the logout function
   const navigate = useNavigate();
   const handleLogout = () => {
     logout(); // Calls the central logout

@@ -1,40 +1,54 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
+
 const AuthContext = createContext();
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  // Check localStorage on boot to see if user was already logged in
+  const [loading, setLoading] = useState(true);
+
+  // Set default base URL for all axios calls
+  // eslint-disable-next-line react-hooks/immutability
+  axios.defaults.baseURL = "http://localhost:5000";
+
   useEffect(() => {
-    const savedUser = localStorage.getItem("user");
+    const savedUser = localStorage.getItem("Users");
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      const parsedUser = JSON.parse(savedUser);
+      setUser(parsedUser);
+      // Attach token to axios headers for future requests
+      axios.defaults.headers.common['Authorization'] = `Bearer ${parsedUser.token}`;
     }
+    setLoading(false);
   }, []);
-  const login = (email, password) => {
-    // Standardized Admin Credentials
-    if (email === "admin@gmail.com" && password === "admin123") {
-      const adminUser = { email, role: 'admin' };
-      setUser(adminUser);
-      localStorage.setItem("user", JSON.stringify(adminUser));
-      return { success: true, role: 'admin' };
+
+  const login = async (email, password) => {
+    try {
+      const res = await axios.post("/user/login", { email, password });
+      if (res.data) {
+        const userData = { ...res.data.user, token: res.data.token };
+        setUser(userData);
+        localStorage.setItem("Users", JSON.stringify(userData));
+        axios.defaults.headers.common['Authorization'] = `Bearer ${userData.token}`;
+        return { success: true, role: userData.role };
+      }
+    } catch (error) {
+      return { success: false, message: error.response?.data?.message || "Login failed" };
     }
-    
-    // Default User Logic
-    if (email !== "" && password !== "") {
-      const regularUser = { email, role: 'user' };
-      setUser(regularUser);
-      localStorage.setItem("user", JSON.stringify(regularUser));
-      return { success: true, role: 'user' };
-    }
-    return { success: false };
   };
+
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("user");
+    localStorage.removeItem("Users");
+    delete axios.defaults.headers.common['Authorization'];
   };
+
   return (
-    <AuthContext.Provider value={{ user, setUser, login, logout }}>
-      {children}
+    <AuthContext.Provider value={{ user, setUser, login, logout, loading }}>
+      {!loading && children}
     </AuthContext.Provider>
   );
 };
-export const userAuth = () => useContext(AuthContext);
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const useAuth = () => useContext(AuthContext);

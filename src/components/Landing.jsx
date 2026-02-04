@@ -1,10 +1,11 @@
+// 👉 Import Link from react-router-dom for navigation
 import { Link } from "react-router-dom";
 export default function Landing() {
-  const books = [
-    { title: "React Handbook", price: "799", tag: "Frontend" },
-    { title: "Advanced JavaScript", price: "899", tag: "Core" },
-    { title: "System Design", price: "1,299", tag: "Architecture" },
-  ];
+  // const books = [
+  //   { title: "React Handbook", price: "799", tag: "Frontend" },
+  //   { title: "Advanced JavaScript", price: "899", tag: "Core" },
+  //   { title: "System Design", price: "1,299", tag: "Architecture" },
+  // ];
   return (
     <main className="bg-gradient-to-b from-indigo-50 via-white to-slate-50">
       {/* ================= HERO SECTION ================= */}
@@ -83,40 +84,7 @@ export default function Landing() {
               Hand-picked for modern builders
             </h2>
           </div>
-          <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3">
-            {books.map((book, i) => (
-              <div
-                key={i} // key is required for list rendering in React
-                className="
-                  group bg-white rounded-2xl border border-slate-200 p-6
-                  hover:shadow-xl hover:shadow-indigo-200/40
-                  hover:border-indigo-200
-                  transition-all duration-300 cursor-pointer
-                "
-              >
-                <div
-                  className="
-                    aspect-[3/4] mb-6 rounded-xl bg-indigo-50
-                    border border-dashed border-indigo-200
-                    flex items-center justify-center
-                    group-hover:bg-indigo-100 transition
-                  "
-                >
-                  <span className="text-indigo-300 text-sm">Cover Art</span>
-                </div>
-                <p className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-1">
-                  {book.tag}
-                </p>
-                <h3 className="text-lg font-semibold text-slate-800 group-hover:text-indigo-600 transition-colors">
-                  {book.title}
-                </h3>
-                <p className="text-slate-500 mt-1 font-medium">
-                  ₹{book.price}
-                </p>
-              </div>
-            ))}
           </div>
-        </div>
       </section>
       {/* ================= VALUE PROPS ================= */}
       <section className="max-w-6xl mx-auto px-6 py-24">

@@ -1,35 +1,47 @@
 import React, { useEffect, useState } from "react";
-import AdminSidebar from "../../components/admin/AdminSidebar";
-import AdminNavbar from "../../components/admin/AdminNavbar";
-import AddBookModal from "../../components/admin/AddBookModal";
-export default function ManageBooks({ setUser }) {
+import axios from "axios";
+import AdminSidebar from "../../components/Admin/AdminSidebar";
+import AdminNavbar from "../../components/Admin/AdminNavbar";
+import AddBookModal from "../../components/Admin/AddBookModal";
+import toast from "react-hot-toast";
+
+export default function ManageBooks() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const fetchBooks = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/books");
-      const data = await res.json();
-      setBooks(data);
+      // Axios uses the baseURL and Auth header from your AuthProvider
+      const res = await axios.get("/api/books");
+      setBooks(res.data);
       setLoading(false);
     } catch (error) {
       console.error("Failed to fetch books", error);
+      toast.error("Error loading books");
       setLoading(false);
     }
   };
+
   const deleteBook = async (id) => {
-    if (!window.confirm("Delete this book?")) return;
-    await fetch(`http://localhost:5000/api/books/${id}`, {
-      method: "DELETE",
-    });
-    fetchBooks();
+    if (!window.confirm("Are you sure you want to delete this book?")) return;
+
+    try {
+      await axios.delete(`/api/books/${id}`);
+      toast.success("Book deleted successfully");
+      fetchBooks();
+    } catch (error) {
+      toast.error("Failed to delete book");
+    }
   };
+
   useEffect(() => {
     fetchBooks();
   }, []);
+
   return (
     <div className="flex min-h-screen bg-slate-50">
-      <AdminSidebar setUser={setUser} />
+      <AdminSidebar />
       <div className="flex-grow flex flex-col">
         <AdminNavbar title="Inventory Management" />
         <main className="p-8">
@@ -42,7 +54,7 @@ export default function ManageBooks({ setUser }) {
               + Add New Book
             </button>
           </div>
-          {/* Table */}
+
           <div className="bg-white rounded-xl shadow overflow-x-auto">
             {loading ? (
               <p className="p-6 text-gray-500">Loading books...</p>
@@ -54,18 +66,16 @@ export default function ManageBooks({ setUser }) {
                     <th className="p-4">Author</th>
                     <th className="p-4">Price</th>
                     <th className="p-4">Stock</th>
-                    <th className="p-4">Sold</th>
                     <th className="p-4">Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {books.map((book) => (
-                    <tr key={book._id} className="border-t">
-                      <td className="p-4">{book.title}</td>
+                    <tr key={book._id} className="border-t hover:bg-slate-50">
+                      <td className="p-4 font-medium">{book.title}</td>
                       <td className="p-4">{book.author}</td>
                       <td className="p-4">₹{book.price}</td>
                       <td className="p-4">{book.stock}</td>
-                      <td className="p-4">{book.sold}</td>
                       <td className="p-4">
                         <button
                           onClick={() => deleteBook(book._id)}
@@ -82,6 +92,7 @@ export default function ManageBooks({ setUser }) {
           </div>
         </main>
       </div>
+
       <AddBookModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

@@ -1,9 +1,9 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { userAuth } from "../context/AuthProvider";
+import { useAuth } from "../context/AuthProvider";
 import { useCart } from "../context/CartContext";
 export default function Navbar() {
-  const { user, logout } = userAuth();
+  const { user, logout } = useAuth();
   const {cart} = useCart();
   const navigate = useNavigate();
   const cartItemCount = cart.reduce((total,item)=> total + item.qty, 0);  
