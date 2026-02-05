@@ -27,20 +27,23 @@ function Signup() {
     }
   };
   return (
-    <div className="flex h-screen items-center justify-center bg-slate-50">
-      <div className="w-full max-w-md bg-white p-10 rounded-3xl shadow-xl border border-slate-100">
-        <h3 className="font-bold text-2xl text-slate-900 mb-6">Create Account</h3>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <input type="text" placeholder="Full Name" {...register("fullname", { required: true })} className="w-full px-4 py-2 border rounded-xl outline-none" />
-          <input type="email" placeholder="Email" {...register("email", { required: true })} className="w-full px-4 py-2 border rounded-xl outline-none" />
-          <input type="password" placeholder="Password" {...register("password", { required: true })} className="w-full px-4 py-2 border rounded-xl outline-none" />
-          <button className="w-full bg-pink-500 text-white py-3 rounded-xl font-bold hover:bg-pink-600 transition-all">Signup</button>
-          <p className="text-center text-sm text-slate-600">
-            Already have account? <Link to="/login" className="text-blue-600 underline">Login</Link>
-          </p>
-        </form>
-      </div>
-    </div>
+   // Simplified snippet for Signup button and container style
+<div className="min-h-screen flex items-center justify-center bg-slate-50 px-6">
+  <div className="w-full max-w-md bg-white p-12 rounded-[2.5rem] shadow-2xl shadow-indigo-100 border border-slate-100">
+    <h3 className="text-3xl font-black text-slate-900 mb-2">Join us.</h3>
+    <p className="text-slate-500 mb-8">Create an account to start building your library.</p>
+    
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      <input {...register("fullname")} className="w-full px-5 py-4 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-2xl transition-all outline-none" placeholder="Full Name" />
+      <input {...register("email")} className="w-full px-5 py-4 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-2xl transition-all outline-none" placeholder="Email" />
+      <input type="password" {...register("password")} className="w-full px-5 py-4 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-2xl transition-all outline-none" placeholder="Password" />
+      
+      <button className="w-full bg-indigo-600 py-4 text-white rounded-2xl font-bold shadow-xl shadow-indigo-100 hover:bg-indigo-700 hover:-translate-y-0.5 transition-all">
+        Create Account
+      </button>
+    </form>
+  </div>
+</div>
   );
 }
 export default Signup;
